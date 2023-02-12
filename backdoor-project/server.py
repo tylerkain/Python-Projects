@@ -1,5 +1,21 @@
 #!bin/bash
 import socket
+import json
+
+def reliable_send(data):
+    json_data = json.dumps(data)
+    target.send(json_data.encode())
+
+def reliable_recv():
+    data=''
+    while True:
+        try:
+            data = data + target.recv(1024).decode().rstrip()
+            return json.loads(data)
+        except ValueError:
+            continue
+
+
 
 def target_communcation():
     while True:
