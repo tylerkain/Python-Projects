@@ -1,9 +1,10 @@
+#!bin/bash
 import requests
 
 url = input("[+] input Url: ")
 username = input('[+] Enter Username: ')
 password_file = input('[+] Enter password file: ')
-login_failed =
+login_failed =input('[+] Enter String that Occurs when Login Fails: ')
 
 def cracking(username, url):
     for password in passwords:
