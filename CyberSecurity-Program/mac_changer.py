@@ -10,7 +10,7 @@ def get_input():
                       help="interface to change")
     parser.add_option("-m", "--mac", dest="new_mac",
                       help="new mac address for interface")
-    (options, args) = parser.parse_args()
+    (options, arguments) = parser.parse_args()
     if not options.interface:
         parser.error("[-] Please specify interface, use --help")
     elif not options.mac:
