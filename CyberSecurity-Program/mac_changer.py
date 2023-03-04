@@ -1,10 +1,11 @@
 ''' modules'''
 import subprocess
 import optparse
+import re
 
 
 def get_input():
-    """Get user input"""
+    """Get input"""
     parser = optparse.OptionParser()
     parser.add_option("-i", "--interface", dest="interface",
                       help="interface to change")
@@ -19,12 +20,20 @@ def get_input():
 
 
 def change_mac(interface, mac):
-    '''MAC Changer Function '''
+    '''Mac changer function '''
     print(f'changing {interface} to {mac}')
     subprocess.call(['ifconfig', interface, 'down'])
     subprocess.call(['ifconfig', interface, 'hw', 'ether', mac])
     subprocess.call(['ifconfig', interface, 'up'])
 
 
+def check_output():
+    """check output of interface"""
+    result = subprocess.check_output(["ifconfig", options.interface])
+    output = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", result )
+    return output
+
+
 options = get_input()
 change_mac(options.interface, options.mac)
+check_output()
