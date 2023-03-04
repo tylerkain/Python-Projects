@@ -31,7 +31,7 @@ def check_output():
     """check output of interface"""
     result = subprocess.check_output(["ifconfig", options.interface], encoding='utf8')
     output = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", result )
-    return output
+    print(output)
 
 
 options = get_input()
