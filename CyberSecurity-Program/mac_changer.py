@@ -27,13 +27,13 @@ def change_mac(interface, mac):
     subprocess.call(['ifconfig', interface, 'up'])
 
 
-def check_output():
+def check_output(interface):
     """check output of interface"""
-    result = subprocess.check_output(["ifconfig", options.interface], encoding='utf8')
+    result = subprocess.check_output(["ifconfig", interface], encoding='utf8')
     output = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", result )
-    print(output)
+    print(output[0])
 
 
 options = get_input()
 change_mac(options.interface, options.mac)
-check_output()
+check_output(options.interface)
