@@ -1,12 +1,11 @@
+'''subprocess module'''
 import subprocess
 
 
-def change_mac():
-    subprocess.call('ifconfig', shell=True)
-    interface = input('[+] Wireless adapter to change: ')
-    mac = input ('[+] New MAC address:  ')
-    subprocess.call(f'ifconfig {interface} down', shell=True)
-    subprocess.call(f'ifconfig {interface} hw ether {mac}', shell=True)
+def change_mac(interface, mac):
+    '''MAC Changer Function '''
+    subprocess.call(['ifconfig'], shell=True)
+    subprocess.call(['ifconfig', interface, 'down'], shell=True)
+    subprocess.call(['ifconfig', interface, 'hw', 'ether', mac], shell=True)
     print(f'changing {interface} to {mac}')
-    subprocess.call(f'ifconfig {interface} up')
-
+    subprocess.call(['ifconfig', interface, 'up'], shell=True)
