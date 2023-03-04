@@ -8,7 +8,7 @@ def get_input():
     parser = optparse.OptionParser()
     parser.add_option("-i", "--interface", dest="interface",
                       help="interface to change")
-    parser.add_option("-m", "--mac", dest="new_mac",
+    parser.add_option("-m", "--mac", dest="mac",
                       help="new mac address for interface")
     (options, arguments) = parser.parse_args()
     if not options.interface:
