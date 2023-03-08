@@ -12,5 +12,10 @@ def monitor_mode(interface):
     subprocess.call(['iwconfig', interface, 'mode', 'monitor'])
     subprocess.call(['ifconfig', interface, 'up'])
 
+def check_wps(interface): 
+    """Check for Wps enabled"""
+    print(f"using {interface} to check for wps")
+    subprocess.call(['wash', '--interface', interface])
 
-monitor_mode(adapter)   
+monitor_mode(adapter)
+check_wps(adapter)   
