@@ -1,4 +1,9 @@
+#!/usr/bin/env python
+"""Modules"""
 import subprocess
+
+"""variables"""
+adapter = input("[+] Input wifi adapter or wireless card: ")
 
 def monitor_mode(interface): 
     '''enable monitor mode '''

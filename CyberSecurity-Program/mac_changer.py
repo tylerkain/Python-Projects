@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 ''' modules'''
 import subprocess
 import optparse
