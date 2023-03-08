@@ -11,3 +11,6 @@ def monitor_mode(interface):
     subprocess.call(['ifconfig', interface, 'down'])
     subprocess.call(['iwconfig', interface, 'mode', 'monitor'])
     subprocess.call(['ifconfig', interface, 'up'])
+
+
+monitor_mode(adapter)   
