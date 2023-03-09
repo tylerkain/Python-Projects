@@ -20,7 +20,7 @@ def check_wps(interface):
         print(f"using {interface} to check for wps")
         subprocess.call(['wash', '--interface', interface])
     except KeyboardInterrupt: 
-        sys.quit()
+        sys.exit(0)
 
 def handshake(adapter, wifi_mac, adapter_mac): 
     """capture handshake"""
