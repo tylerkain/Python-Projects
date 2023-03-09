@@ -29,5 +29,5 @@ try:
     monitor_mode(adapter)
     check_wps(adapter)
 except KeyboardInterrupt:
+    pass
     handshake(adapter)
-       
