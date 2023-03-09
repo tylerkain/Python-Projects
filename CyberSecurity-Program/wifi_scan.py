@@ -30,4 +30,5 @@ try:
     check_wps(adapter)
 except KeyboardInterrupt:
     pass
-    handshake(adapter)
+
+handshake(adapter)
