@@ -19,7 +19,7 @@ def check_wps(interface):
     print(f"using {interface} to check for wps")
     subprocess.call(['wash', '--interface', interface])
 
-def handshake(adapter, wifi_mac, adapter_mac): 
+def handshake(adapter): 
     """capture handshake"""
     print("print capturing handshake")
     wifi_mac = input("[+] Input wifi mac address: ")
