@@ -24,7 +24,7 @@ def handshake(adapter):
     print("print capturing handshake")
     wifi_mac = input("[+] Input wifi mac address: ")
     result = subprocess.check_output(["ifconfig", adapter], encoding='utf8')
-    output = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", result )
+    output = re.search(r"([A-Za-z0-9]+(-[A-Za-z0-9]+)+)", result )
     print(output)
     adapter_mac = input("[+] Input adapter mac: ")
     channel = input("[+] Input Channel of Wifi Network: ")
