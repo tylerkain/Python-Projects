@@ -46,13 +46,18 @@ def handshake(adapter):
 
 
 
-    
-try:
-    monitor_mode(adapter)
-    check_wps(adapter)
-except KeyboardInterrupt:
-    pass
+user_selection = input("[+] Which Vunerability do you want to run: \n 1. WPS \n 2. Wordlist Attack")
 
-wps_vunerability(adapter)
+if user_selection == '1':
+    try:
+        monitor_mode(adapter)
+        check_wps(adapter)
+    except KeyboardInterrupt:
+        pass
+
+    wps_vunerability(adapter)
+elif  user_selection == '2': 
+    handshake(adapter)
+
 
 
