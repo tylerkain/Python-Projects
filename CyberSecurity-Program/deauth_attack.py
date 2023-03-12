@@ -12,7 +12,7 @@ def get_input():
     parser.add_option("-i", dest="interface",
                       help="use -i to specify interface ")
     parser.add_option("-p", dest="deauth_pack", help="use -p to input number of deauth packets")
-    parser.add_option('-c',dest=' use -c to specify client_mac')
+    parser.add_option('-c',dest='client_mac', help="specify client mac address")
     (options, arguments) = parser.parse_args()
     if not options.client_bssid:
         parser.error("[-] Please specify wifi bssid in use --help")
