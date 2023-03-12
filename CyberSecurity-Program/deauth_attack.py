@@ -8,15 +8,15 @@ def get_input():
     """Get input"""
     parser = optparse.OptionParser()
     parser.add_option("-a", dest="client_bssid",
-                      help="client bssid")
+                      help="use -a to specify client bssid")
     parser.add_option("-i", dest="interface",
-                      help="interface to use")
-    parser.add_option("-p", dest="deauth_pack", help="number of deauth packets")
-    parser.add_option('-c',dest='client_mac')
+                      help="use -i to specify interface ")
+    parser.add_option("-p", dest="deauth_pack", help="use -p to input number of deauth packets")
+    parser.add_option('-c',dest=' use -c to specify client_mac')
     (options, arguments) = parser.parse_args()
     if not options.client_bssid:
         parser.error("[-] Please specify wifi bssid in use --help")
-    elif not options.wireless_adapter:
+    elif not options.interface:
         parser.error("[-] Please specify mac, use --help")
     elif not options.deauth_pack:
         parser.error("[+] please specify number of deauth packets, use --help")
