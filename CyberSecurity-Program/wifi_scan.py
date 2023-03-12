@@ -37,8 +37,8 @@ def handshake(adapter):
         print("[+] Press Control + C to stop scan")
         subprocess.call(['airodump-ng', adapter])
     except KeyboardInterrupt:
-        wifi_bssid = input("[+] Input BSSID of wifi:") 
-        channel = input("[+] Input wifi_channel")
+        wifi_bssid = input("[+] Input BSSID of wifi: ") 
+        channel = input("[+] Input wifi_channel: ")
         handshake_file = input("enter name of handshake file: ")
         subprocess.call(['airodump-ng', '--bssid', wifi_bssid, '--channel', channel, '--write', handshake_file, adapter])
         wordlist_file = 'wordlist.txt'
@@ -46,7 +46,7 @@ def handshake(adapter):
 
 
 
-user_selection = input("[+] Which Vunerability do you want to run: \n 1. WPS \n 2. Wordlist Attack \n")
+user_selection = input("[+] Which Vunerability do you want to run: \n 1. WPS \n 2. Wordlist Attack \n Selection: ")
 
 if user_selection == '1':
     try:
