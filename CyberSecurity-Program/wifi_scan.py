@@ -40,7 +40,7 @@ def handshake(adapter):
         wifi_bssid = input("[+] Input BSSID of wifi:") 
         channel = input("[+] Input wifi_channel")
         handshake_file = input("enter name of handshake file: ")
-        subprocess.call(['airodump', '--bssid', wifi_bssid, '--channel', channel, '--write', handshake_file, adapter])
+        subprocess.call(['airodump-ng', '--bssid', wifi_bssid, '--channel', channel, '--write', handshake_file, adapter])
         wordlist_file = 'wordlist.txt'
         subprocess.call['aircrack-ng',handshake_file + "-01.cap", '-w', wordlist_file]
 
