@@ -46,7 +46,7 @@ def handshake(adapter):
 
 
 
-user_selection = input("[+] Which Vunerability do you want to run: \n 1. WPS \n 2. Wordlist Attack")
+user_selection = input("[+] Which Vunerability do you want to run: \n 1. WPS \n 2. Wordlist Attack \n")
 
 if user_selection == '1':
     try:
