@@ -5,7 +5,7 @@ import scapy.all as scapy
 import optparse
 
 def get_input():
-    """Get input"""
+    """Get IP CLI"""
     parser = optparse.OptionParser()
     parser.add_option("--ip", dest="ip",
                       help="IP address/range to scan")
