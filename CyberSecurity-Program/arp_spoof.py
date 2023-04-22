@@ -23,6 +23,13 @@ def create_packet(target_ip, spoof_ip):
     scapy.send(packet)
 
 
+def restore(destination_ip, source_ip):
+    destination_mac = scan(destination_ip)
+    source_mac = scan(source_ip)
+    packet = scapy.ARP(op=2, pdst=destination_ip, hwdst=destination_mac, psrc=source_ip, hwsrc=source_mac)
+    scapy.send(packet, count=4, Verbose=False)
+    print("Restore in Progres...")
+
 while program:
     try:
         packet_count += 2
@@ -33,3 +40,4 @@ while program:
     except KeyboardInterrupt:
         print("ctrl + c pressed... quitting")
         program = False
+        restore(ip, router_ip)
