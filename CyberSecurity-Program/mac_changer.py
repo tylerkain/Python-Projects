@@ -3,46 +3,50 @@ import argparse
 import re
 
 
-def get_input():
-    """Get input"""
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--interface", help="specify interface to change")
-    parser.add_argument("-m", "--mac", help="specify new MAC address for interface")
-    args = parser.parse_args()
+class MacChanger:
+    def __init__(self):
+        self.interface = None
+        self.mac = None
 
-    if not args.interface:
-        parser.error("[-] Please specify interface. Use --help for more information.")
-    elif not args.mac:
-        parser.error("[-] Please specify MAC address. Use --help for more information.")
+    def get_input(self):
+        """Get input"""
+        parser = argparse.ArgumentParser()
+        parser.add_argument("-i", "--interface", help="specify interface to change")
+        parser.add_argument("-m", "--mac", help="specify new MAC address for interface")
+        args = parser.parse_args()
 
-    return args
+        if not args.interface:
+            parser.error("[-] Please specify interface. Use --help for more information.")
+        elif not args.mac:
+            parser.error("[-] Please specify MAC address. Use --help for more information.")
 
+        self.interface = args.interface
+        self.mac = args.mac
 
-def change_mac(interface, mac):
-    '''Mac changer function'''
-    print(f'Changing {interface} to {mac}')
+    def change_mac(self):
+        '''Mac changer function'''
+        print(f'Changing {self.interface} to {self.mac}')
 
-    subprocess.call(['ifconfig', interface, 'down'])
-    subprocess.call(['ifconfig', interface, 'hw', 'ether', mac])
-    subprocess.call(['ifconfig', interface, 'up'])
+        subprocess.call(['ifconfig', self.interface, 'down'])
+        subprocess.call(['ifconfig', self.interface, 'hw', 'ether', self.mac])
+        subprocess.call(['ifconfig', self.interface, 'up'])
 
+    def check_output(self):
+        """Check output of interface"""
+        result = subprocess.check_output(["ifconfig", self.interface], encoding='utf8')
+        output = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", result)
 
-def check_output(interface):
-    """Check output of interface"""
-    result = subprocess.check_output(["ifconfig", interface], encoding='utf8')
-    output = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", result)
+        if output:
+            print(output.group(0))
+        else:
+            print("No MAC address found.")
 
-    if output:
-        print(output.group(0))
-    else:
-        print("No MAC address found.")
-
-
-def main():
-    options = get_input()
-    change_mac(options.interface, options.mac)
-    check_output(options.interface)
+    def run(self):
+        self.get_input()
+        self.change_mac()
+        self.check_output()
 
 
 if __name__ == "__main__":
-    main()
+    mac_changer = MacChanger()
+    mac_changer.run()
