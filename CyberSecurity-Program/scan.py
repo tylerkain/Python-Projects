@@ -48,21 +48,23 @@ class WifiScan:
 
         try:
             print("[+] Press Control + C to stop scan")
-            subprocess.run(['airodump-ng', self.adapter])
+            airodump_process = subprocess.Popen(['airodump-ng', self.adapter])
+            airodump_process.wait()
         except KeyboardInterrupt:
             channel = input("[+] Input channel of Wi-Fi network: ")
             client_bssid = input("[+] Input client BSSID: ")
             handshake_file = input("[+] Input handshake file name: ")
-            cmd = [
+
+            subprocess.run([
                 'airodump-ng',
                 '--bssid', client_bssid,
                 '--channel', channel,
                 '--write', handshake_file,
                 self.adapter
-            ]
-            subprocess.run(cmd)
+            ])
 
-            self.deauth_attack(client_bssid, deauth_pack, current_mac)
+            client_mac = current_mac
+            self.deauth_attack(client_bssid, deauth_pack, client_mac)
 
     def run_wifi_scan(self):
         user_selection = self.get_user_selection()
