@@ -1,8 +1,3 @@
-from scan import WirelessSecurityTool
-from network_scanner import ScanNetworkTool
-from mac_changer import MacChanger
-
-
 def main():
     tool_choices = {
         "1": {
