@@ -1,3 +1,5 @@
+import subprocess
+import getmac
 from scan import WifiScan
 from network_scanner import ScanNetworkTool
 from mac_changer import MacChanger
@@ -59,6 +61,11 @@ def main():
                 handshake_file = input(tool_data['input_prompt'])
                 wordlist_file = input(tool_data['wordlist_prompt'])
                 tool_instance = tool_class(handshake_file, wordlist_file)
+            elif tool_data['tool_name'] == "WifiScan":
+                adapter = input_value
+                tool_instance = tool_class(adapter)
+                tool_instance.capture_handshake()
+                continue  # Return to the main menu
             else:
                 tool_instance = tool_class(input_value)
 

