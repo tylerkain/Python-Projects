@@ -1,3 +1,6 @@
+from mac_changer import MacChanger
+from network_scanner import ScanNetworkTool
+from scan import WirelessSecurityTool
 def main():
     tool_choices = {
         "1": {
