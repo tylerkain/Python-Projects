@@ -1,20 +1,8 @@
-import subprocess
 from scan import WifiScan
 from network_scanner import ScanNetworkTool
 from mac_changer import MacChanger
 from scan import WordlistAttackTool
-
-
-class DeauthAttack:
-    def __init__(self, adapter):
-        self.adapter = adapter
-
-    def execute_attack(self, client_bssid, deauth_pack, client_mac):
-        '''Deauth attack function'''
-        print(f'Deauth attack against {client_bssid} on {client_mac} using {self.adapter}')
-        subprocess.run(
-            ['aireplay-ng', '--deauth', str(deauth_pack), '-a', client_bssid, '-c', client_mac, self.adapter],
-            check=True)
+from deauth_attack import DeauthAttack
 
 
 def main():
@@ -83,7 +71,7 @@ def main():
 
             if tool_data['tool_name'] == "WifiScan":
                 tool_instance.capture_handshake()
-                deauth_instance = DeauthAttack()
+                deauth_instance = DeauthAttack(input_value)
                 client_bssid = input("[+] Input client BSSID: ")
                 deauth_pack = int(input("[+] Input number of deauth packets: "))
                 client_mac = input("[+] Input client MAC address: ")
