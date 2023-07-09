@@ -22,34 +22,38 @@ def main():
         "3": {
             "tool_name": "MAC Changer Tool",
             "input_prompt": "[+] Input interface to change MAC address: ",
-            "mac_prompt": "[+] Input new MAC address: ",
             "tool_class": MacChanger,
             "tool_method": "run"
         }
     }
 
-    print("[+] Choose a tool:")
-    for choice, tool_data in tool_choices.items():
-        print(f"{choice}. {tool_data['tool_name']}")
+    while True:
+        print("[+] Choose a tool:")
+        for choice, tool_data in tool_choices.items():
+            print(f"{choice}. {tool_data['tool_name']}")
 
-    choice = input("Choice: ")
+        choice = input("Choice (0 to exit): ")
 
-    tool_data = tool_choices.get(choice)
-    if tool_data:
-        input_value = input(tool_data['input_prompt'])
-        tool_class = tool_data['tool_class']
-        tool_method = tool_data['tool_method']
+        if choice == '0':
+            break
 
-        if "output_prompt" in tool_data:
-            output_value = input(tool_data['output_prompt'])
-            scan_arguments = input(tool_data['scan_arguments_prompt'])
-            tool_instance = tool_class(input_value, output_value, scan_arguments)
+        tool_data = tool_choices.get(choice)
+        if tool_data:
+            input_value = input(tool_data['input_prompt'])
+            tool_class = tool_data['tool_class']
+            tool_method = tool_data['tool_method']
+
+            if "output_prompt" in tool_data:
+                output_value = input(tool_data['output_prompt'])
+                scan_arguments = input(tool_data['scan_arguments_prompt'])
+                tool_instance = tool_class(input_value, output_value, scan_arguments)
+            else:
+                tool_instance = tool_class()
+                setattr(tool_instance, 'interface', input_value)
+
+            getattr(tool_instance, tool_method)()
         else:
-            tool_instance = tool_class(input_value)
-
-        getattr(tool_instance, tool_method)()
-    else:
-        print("Invalid choice. Exiting...")
+            print("Invalid choice. Please try again.")
 
 
 if __name__ == "__main__":

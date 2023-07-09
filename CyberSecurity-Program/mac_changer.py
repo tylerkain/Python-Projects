@@ -1,6 +1,7 @@
 import subprocess
 import argparse
 import re
+import random
 
 
 class MacChanger:
@@ -12,16 +13,18 @@ class MacChanger:
         """Get input"""
         parser = argparse.ArgumentParser()
         parser.add_argument("-i", "--interface", help="specify interface to change")
-        parser.add_argument("-m", "--mac", help="specify new MAC address for interface")
         args = parser.parse_args()
 
         if not args.interface:
             parser.error("[-] Please specify interface. Use --help for more information.")
-        elif not args.mac:
-            parser.error("[-] Please specify MAC address. Use --help for more information.")
-
         self.interface = args.interface
-        self.mac = args.mac
+        self.mac = self.generate_random_mac()
+
+    def generate_random_mac(self):
+        """Generate a random MAC address"""
+        mac = [random.randint(0x00, 0xff) for _ in range(6)]
+        mac_str = ':'.join(map(lambda x: f'{x:02x}', mac))
+        return mac_str
 
     def change_mac(self):
         '''Mac changer function'''
