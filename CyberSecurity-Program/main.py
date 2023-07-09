@@ -1,4 +1,4 @@
-from scan import WirelessSecurityTool
+from scan import WifiScan
 from network_scanner import ScanNetworkTool
 from mac_changer import MacChanger
 from scan import WordlistAttackTool
@@ -7,10 +7,10 @@ from scan import WordlistAttackTool
 def main():
     tool_choices = {
         "1": {
-            "tool_name": "Wireless Security Tool",
+            "tool_name": "WifiScan",
             "input_prompt": "[+] Input Wi-Fi adapter or wireless card: ",
-            "tool_class": WirelessSecurityTool,
-            "tool_method": "run_wireless_security_tool"
+            "tool_class": WifiScan,
+            "tool_method": "run_wifi_scan"
         },
         "2": {
             "tool_name": "Network Scanner Tool",
