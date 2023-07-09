@@ -1,6 +1,8 @@
-from mac_changer import MacChanger
-from network_scanner import ScanNetworkTool
 from scan import WirelessSecurityTool
+from network_scanner import ScanNetworkTool
+from mac_changer import MacChanger
+
+
 def main():
     tool_choices = {
         "1": {
@@ -46,8 +48,7 @@ def main():
                 scan_arguments = input(tool_data['scan_arguments_prompt'])
                 tool_instance = tool_class(input_value, output_value, scan_arguments)
             else:
-                tool_instance = tool_class()
-                setattr(tool_instance, 'interface', input_value)
+                tool_instance = tool_class(input_value)
 
             getattr(tool_instance, tool_method)()
         else:

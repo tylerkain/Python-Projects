@@ -35,9 +35,3 @@ class MacChanger:
     def run(self):
         self.change_mac()
         self.check_output()
-
-
-if __name__ == "__main__":
-    interface = input("Enter the interface to change: ")
-    mac_changer = MacChanger(interface)
-    mac_changer.run()
