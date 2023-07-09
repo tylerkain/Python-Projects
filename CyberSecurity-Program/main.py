@@ -1,6 +1,7 @@
 from scan import WirelessSecurityTool
 from network_scanner import ScanNetworkTool
 from mac_changer import MacChanger
+from scan import WordlistAttackTool
 
 
 def main():
@@ -24,6 +25,13 @@ def main():
             "input_prompt": "[+] Input interface to change MAC address: ",
             "tool_class": MacChanger,
             "tool_method": "run"
+        },
+        "4": {
+            "tool_name": "Wordlist Attack Tool",
+            "input_prompt": "[+] Input handshake file: ",
+            "wordlist_prompt": "[+] Input wordlist file: ",
+            "tool_class": WordlistAttackTool,
+            "tool_method": "run_wordlist_attack"
         }
     }
 
@@ -47,6 +55,10 @@ def main():
                 output_value = input(tool_data['output_prompt'])
                 scan_arguments = input(tool_data['scan_arguments_prompt'])
                 tool_instance = tool_class(input_value, output_value, scan_arguments)
+            elif "wordlist_prompt" in tool_data:
+                handshake_file = input(tool_data['input_prompt'])
+                wordlist_file = input(tool_data['wordlist_prompt'])
+                tool_instance = tool_class(handshake_file, wordlist_file)
             else:
                 tool_instance = tool_class(input_value)
 

