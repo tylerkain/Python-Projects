@@ -53,12 +53,12 @@ class WifiScan:
             input("Press Enter to stop the capture process...")
 
         except KeyboardInterrupt:
-            channel = input("[+] Input channel of Wi-Fi network: ")
             bssids = self.get_wifi_bssid()
             print("Available BSSIDs:")
             for i, bssid in enumerate(bssids, start=1):
                 print(f"{i}. {bssid}")
             bssid_choice = int(input("Select the client BSSID: "))
+            channel = input("[+] Input channel of Wi-Fi network: ")
             client_bssid = bssids[bssid_choice - 1]
             handshake_file = input("[+] Input handshake file name: ")
             subprocess.run([
