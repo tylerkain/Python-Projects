@@ -71,11 +71,7 @@ def main():
 
             if tool_data['tool_name'] == "WifiScan":
                 tool_instance.capture_handshake()
-                deauth_instance = DeauthAttack(input_value)
-                client_bssid = input("[+] Input client BSSID: ")
-                deauth_pack = int(input("[+] Input number of deauth packets: "))
-                client_mac = input("[+] Input client MAC address: ")
-                deauth_instance.execute_attack(client_bssid, deauth_pack, client_mac)
+                DeauthAttack(input_value)
             else:
                 getattr(tool_instance, tool_method)()
         else:
