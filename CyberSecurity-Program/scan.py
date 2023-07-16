@@ -21,6 +21,14 @@ class WordlistAttackTool:
 import subprocess
 import getmac
 
+import subprocess
+import getmac
+
+
+import subprocess
+import getmac
+import time
+
 
 class WifiScan:
     def __init__(self, adapter):
@@ -34,42 +42,65 @@ class WifiScan:
         current_mac = getmac.get_mac_address(interface=self.adapter)
         print("Current MAC address:", current_mac)
 
-        try:
-            output = subprocess.check_output(['airodump-ng', '--output-format', 'csv', self.adapter])
-            bssids = []
-            lines = output.splitlines()
-            for line in lines:
-                if line.strip().startswith('BSSID'):
-                    bssid, channel, _ = line.split(',', 3)[0:3]
-                    bssids.append((bssid, channel))
-            print("Available BSSIDs:")
-            for i, (bssid, channel) in enumerate(bssids, start=1):
-                print(f"{i}. BSSID: {bssid}, Channel: {channel}")
-            bssid_choice = int(input("Select the client BSSID: "))
-            selected_bssid = bssids[bssid_choice - 1]
-            channel = selected_bssid[1]
-            client_bssid = selected_bssid[0]
-            handshake_file = input("[+] Input handshake file name: ")
-            self.run_airodump(client_bssid, channel, handshake_file)
-        except subprocess.CalledProcessError as e:
-            print("Error: Failed to retrieve BSSIDs:", e)
-
-    def run_airodump(self, client_bssid, channel, handshake_file):
-        """Run airodump-ng with selected BSSID and channel"""
-        subprocess.run([
-            'airodump-ng',
-            '--bssid', client_bssid,
-            '--channel', channel,
-            '--write', handshake_file,
-            self.adapter
-        ])
-
-    def run_wifi_scan(self):
         while True:
             try:
-                self.capture_handshake()
-            except KeyboardInterrupt:
+                self.run_airodump()
                 break
+            except subprocess.CalledProcessError as e:
+                print("Error: Failed to retrieve BSSIDs:", e)
+
+        # Continue with the rest of the code for selecting BSSID, channel, and running airodump-ng
+        bssid_choice = int(input("Select the client BSSID: "))
+        selected_bssid = self.bssids[bssid_choice - 1]
+        channel = selected_bssid[1]
+        client_bssid = selected_bssid[0]
+        handshake_file = input("[+] Input handshake file name: ")
+
+    def run_airodump(self):
+        """Run airodump-ng with timer"""
+        duration = 10  # Set the duration for airodump-ng in seconds
+
+        # Run airodump-ng for the specified duration
+        subprocess.run(['airodump-ng', '--berlin', '--output-format', 'csv', '--write', 'temp', self.adapter], timeout=duration)
+
+        # Read the captured BSSIDs and channels from the temporary file
+        with open('temp-01.csv', 'r') as file:
+            lines = file.readlines()[2:]
+            self.bssids = [(line.split(',')[0], line.split(',')[3]) for line in lines]
+
+        # Clean up temporary files
+        subprocess.run(['rm', 'temp-01.csv'])
+
+    def run_wifi_scan(self):
+        self.capture_handshake()
+
+
+def main():
+    adapter = input("[+] Input Wi-Fi adapter: ")
+    tool = WifiScan(adapter)
+    tool.run_wifi_scan()
+
+    # Execute the desired function after the scan
+    print("Scanning complete. Running the next function...")
+    # Run the next function here
+
+
+if __name__ == "__main__":
+    main()
+
+
+def main():
+    adapter = input("[+] Input Wi-Fi adapter: ")
+    tool = WifiScan(adapter)
+    tool.run_wifi_scan()
+
+    # Execute the desired function after the scan
+    print("Scanning complete. Running the next function...")
+    # Run the next function here
+
+
+if __name__ == "__main__":
+    main()
 
 
 def main():
