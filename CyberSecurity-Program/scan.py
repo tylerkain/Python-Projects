@@ -58,19 +58,9 @@ class WifiScan:
 
     def run_airodump(self):
         """Run airodump-ng with timer"""
-        duration = 10  # Set the duration for airodump-ng in seconds
-
-        # Run airodump-ng for the specified duration
-        subprocess.run(['airodump-ng', '--berlin', '--output-format', 'csv', '--write', 'temp', self.adapter], timeout=duration)
-
-        # Read the captured BSSIDs and channels from the temporary file
-        with open('temp-01.csv', 'r') as file:
-            lines = file.readlines()[2:]
-            self.bssids = [(line.split(',')[0], line.split(',')[3]) for line in lines]
-
-        # Clean up temporary files
-        subprocess.run(['rm', 'temp-01.csv'])
-
+        duration = 10
+        subprocess.run(['airodump-ng', '--berlin', '--output-format', 'csv', '--write', 'temp', self.adapter],
+                       timeout=duration)
     def run_wifi_scan(self):
         self.capture_handshake()
 
