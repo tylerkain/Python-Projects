@@ -1,6 +1,3 @@
-import subprocess
-import getmac
-
 
 class WordlistAttackTool:
     def __init__(self, handshake_file, wordlist_file):
@@ -24,7 +21,6 @@ import getmac
 import subprocess
 import getmac
 
-
 import subprocess
 import getmac
 import time
@@ -34,7 +30,7 @@ class WifiScan:
     def __init__(self, adapter):
         self.adapter = adapter
 
-    def capture_handshake(self):
+    def scan_wifi(self):
         """Capture WPA handshake"""
         print("Capturing handshake")
 
@@ -58,11 +54,11 @@ class WifiScan:
 
     def run_airodump(self):
         """Run airodump-ng with timer"""
-        duration = 10
-        subprocess.run(['airodump-ng', '--berlin', '--output-format', 'csv', '--write', 'temp', self.adapter],
-                       timeout=duration)
+        duration = 100
+        subprocess.run(['airodump-ng', self.adapter], timeout=duration)
+
     def run_wifi_scan(self):
-        self.capture_handshake()
+        self.scan_wifi()
 
 
 def main():
