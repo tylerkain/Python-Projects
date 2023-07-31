@@ -3,6 +3,7 @@ from network_scanner import ScanNetworkTool
 from mac_changer import MacChanger
 from scan import WordlistAttackTool
 from deauth_attack import DeauthAttack
+import PortScanner
 
 
 def main():
@@ -14,7 +15,7 @@ def main():
             "tool_method": "run_wifi_scan"
         },
         "2": {
-            "tool_name": "Network Scanner Tool",
+            "tool_name": "Network PortScanner Tool",
             "input_prompt": "[+] Input IP address or IP range to scan: ",
             "output_prompt": "[+] Input output file path: ",
             "scan_arguments_prompt": "[+] Input the scan type: ",
@@ -39,6 +40,13 @@ def main():
             "input_prompt": "[+] Input Wi-Fi adapter: ",
             "tool_class": DeauthAttack,
             "tool_method": "execute_attack"
+        },
+        "6": {
+            "tool_name": "PortScanner",
+            "input_prompt": "[+] Input IP address: ",
+            "port_prompt": "[+] Input Port range: ",
+            "tool_class": PortScanner,
+            "tool_method": "scan"
         }
     }
 
