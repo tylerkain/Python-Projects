@@ -1,47 +1,22 @@
-from scan import WifiScan
-from network_scanner import ScanNetworkTool
 from mac_changer import MacChanger
-from scan import WordlistAttackTool
 from deauth_attack import DeauthAttack
-import PortScanner
-
+from
 
 def main():
     tool_choices = {
         "1": {
-            "tool_name": "WifiScan",
-            "input_prompt": "[+] Input Wi-Fi adapter or wireless card: ",
-            "tool_class": WifiScan,
-            "tool_method": "run_wifi_scan"
-        },
-        "2": {
-            "tool_name": "Network PortScanner Tool",
-            "input_prompt": "[+] Input IP address or IP range to scan: ",
-            "output_prompt": "[+] Input output file path: ",
-            "scan_arguments_prompt": "[+] Input the scan type: ",
-            "tool_class": ScanNetworkTool,
-            "tool_method": "run_network_scanner"
-        },
-        "3": {
             "tool_name": "MAC Changer Tool",
             "input_prompt": "[+] Input interface to change MAC address: ",
             "tool_class": MacChanger,
             "tool_method": "run"
         },
-        "4": {
-            "tool_name": "Wordlist Attack Tool",
-            "input_prompt": "[+] Input handshake file: ",
-            "wordlist_prompt": "[+] Input wordlist file: ",
-            "tool_class": WordlistAttackTool,
-            "tool_method": "run_wordlist_attack"
-        },
-        "5": {
+        "2": {
             "tool_name": "Deauth Attack",
             "input_prompt": "[+] Input Wi-Fi adapter: ",
             "tool_class": DeauthAttack,
             "tool_method": "execute_attack"
         },
-        "6": {
+        "3": {
             "tool_name": "PortScanner",
             "input_prompt": "[+] Input IP address: ",
             "port_prompt": "[+] Input Port range: ",

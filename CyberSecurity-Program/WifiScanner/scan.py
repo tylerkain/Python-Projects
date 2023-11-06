@@ -1,4 +1,7 @@
 
+import subprocess
+
+
 class WordlistAttackTool:
     def __init__(self, handshake_file, wordlist_file):
         self.handshake_file = handshake_file
@@ -13,17 +16,6 @@ class WordlistAttackTool:
         subprocess.call(cmd)
 
         print("Wordlist attack completed.")
-
-
-import subprocess
-import getmac
-
-import subprocess
-import getmac
-
-import subprocess
-import getmac
-import time
 
 
 class WifiScan:
