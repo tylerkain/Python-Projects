@@ -1,6 +1,6 @@
+# Importing the necessary modules
 from mac_changer import MacChanger
-from deauth_attack import DeauthAttack
-from
+from portscanner import PortScan
 
 def main():
     tool_choices = {
@@ -11,16 +11,10 @@ def main():
             "tool_method": "run"
         },
         "2": {
-            "tool_name": "Deauth Attack",
-            "input_prompt": "[+] Input Wi-Fi adapter: ",
-            "tool_class": DeauthAttack,
-            "tool_method": "execute_attack"
-        },
-        "3": {
             "tool_name": "PortScanner",
             "input_prompt": "[+] Input IP address: ",
             "port_prompt": "[+] Input Port range: ",
-            "tool_class": PortScanner,
+            "tool_class": PortScan,
             "tool_method": "scan"
         }
     }
@@ -41,25 +35,15 @@ def main():
             tool_class = tool_data['tool_class']
             tool_method = tool_data['tool_method']
 
-            if "output_prompt" in tool_data:
-                output_value = input(tool_data['output_prompt'])
-                scan_arguments = input(tool_data['scan_arguments_prompt'])
-                tool_instance = tool_class(input_value, output_value, scan_arguments)
-            elif "wordlist_prompt" in tool_data:
-                handshake_file = input(tool_data['input_prompt'])
-                wordlist_file = input(tool_data['wordlist_prompt'])
-                tool_instance = tool_class(handshake_file, wordlist_file)
-            else:
-                tool_instance = tool_class(input_value)
-
-            if tool_data['tool_name'] == "WifiScan":
-                tool_instance.capture_handshake()
-                DeauthAttack(input_value)
-            else:
-                getattr(tool_instance, tool_method)()
+            if "port_prompt" in tool_data:  # Check if PortScanner tool is chosen
+                port_range = input(tool_data['port_prompt'])
+                tool_instance = tool_class(input_value, port_range)  # Initialize PortScan instance
+                getattr(tool_instance, tool_method)()  # Call the scan method
+            else:  # MAC Changer tool is chosen
+                tool_instance = tool_class(input_value)  # Initialize MacChanger instance
+                getattr(tool_instance, tool_method)()  # Call the run method
         else:
             print("Invalid choice. Please try again.")
-
 
 if __name__ == "__main__":
     main()

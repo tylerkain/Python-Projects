@@ -1,7 +1,6 @@
 import socket
 from IPy import IP
 
-
 class PortScan:
     banners = []
     open_ports = []
@@ -11,7 +10,7 @@ class PortScan:
         self.port_num = port_num
 
     def scan(self):
-        for port in range(1, 500):
+        for port in range(1, self.port_num+1):
             self.scan_port(port)
 
     def check_ip(self):
@@ -36,3 +35,21 @@ class PortScan:
             sock.close()
         except:
             pass
+
+    def save_open_ports(self, output_file):
+        with open(output_file, 'w') as file:
+            for port in self.open_ports:
+                file.write(f"Open port: {port}\n")
+
+def main():
+    targets_ip = input('[+] * Enter Target To Scan For Vulnerable Open Ports: ')
+    port_number = int(input('[+] * Enter Amount Of Ports You Want To Scan (500 - first 500 ports): '))
+    output_file = input('[+] * Enter the output file path to save open ports: ')
+    print('\n')
+
+    target = PortScan(targets_ip, port_number)
+    target.scan()
+    target.save_open_ports(output_file)
+
+if __name__ == "__main__":
+    main()
